@@ -12,10 +12,19 @@ connectDB();
 const app = express();
 
 // CORS Configuration
+// app.use(cors({
+//   origin: '*',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+//   allowedHeaders:  ['Content-Type', 'Authorization'],
+//   credentials: true
+// }));
+
 app.use(cors({
-  origin: '*',
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL 
+    : '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders:  ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
