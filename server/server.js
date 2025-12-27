@@ -4,29 +4,70 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 
 // Load environment variables
-dotenv.config();
+dotenv. config();
 
 // Connect to MongoDB
 connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// CORS Configuration - More permissive
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
-// Routes (will add in Phase 3)
+// Body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Test route with detailed logging
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to CineBase API 🎬' });
+  console.log('✅ GET / route hit');
+  res.setHeader('Content-Type', 'application/json');
+  res.status(200).json({ 
+    success: true,
+    message: 'Welcome to CineBase API 🎬',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Health check route
+app.get('/health', (req, res) => {
+  console.log('✅ GET /health route hit');
+  res.status(200).json({ 
+    status: 'OK',
+    mongodb: 'Connected',
+    server: 'Running'
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  console.log(`⚠️ 404 - Route not found: ${req.method} ${req.url}`);
+  res.status(404).json({ message: 'Route not found' });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  console.error('❌ Error:', err.stack);
+  res.status(500).json({ 
+    success: false,
+    message: 'Something went wrong! ',
+    error: process.env.NODE_ENV === 'development' ? err.message :  undefined
+  });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('='. repeat(50));
+  console.log(`🚀 CineBase Server Started`);
+  console.log(`📡 Port: ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🔗 URL: http://localhost:${PORT}`);
+  console.log(`🔗 URL: http://127.0.0.1:${PORT}`);
+  console.log('='.repeat(50));
 });
