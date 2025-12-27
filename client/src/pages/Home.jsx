@@ -49,7 +49,7 @@ const Home = () => {
       const { data } = await API.get(
         `/movies?page=${page}&limit=20&sortBy=${sortBy}&order=${order}`
       );
-      setMovies(data.data);
+      setMovies(data. data);
       setTotalPages(data.pages);
       setLoading(false);
     } catch (err) {
@@ -86,7 +86,7 @@ const Home = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', width: '100%', overflow: 'hidden' }}>
       {/* Hero Banner */}
       <Box
         sx={{
@@ -94,16 +94,17 @@ const Home = () => {
           color: 'white',
           py: 8,
           mb: 4,
+          width: '100%',
         }}
       >
-        <Box sx={{ maxWidth: '1400px', mx: 'auto', px: { xs: 2, sm: 3, md: 4 } }}>
+        <Box sx={{ px: { xs: 2, sm: 3, md: 4, lg: 6 } }}>
           <Box sx={{ textAlign: 'center' }}>
             <MovieIcon sx={{ fontSize: 80, mb: 2, opacity: 0.9 }} />
             <Typography variant="h2" fontWeight={700} gutterBottom>
               CineBase - IMDb Top 250 Movies
             </Typography>
             <Typography variant="h5" sx={{ opacity: 0.95, maxWidth: 800, mx: 'auto', mt: 2 }}>
-              Explore the greatest movies of all time.  Search, filter, and discover
+              Explore the greatest movies of all time. Search, filter, and discover
               cinematic masterpieces from every era and genre.
             </Typography>
             <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
@@ -117,15 +118,15 @@ const Home = () => {
               />
               <Chip
                 label="Sortable & Searchable"
-                sx={{ bgcolor:  'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
+                sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
               />
             </Box>
           </Box>
         </Box>
       </Box>
 
-      {/* Main Content */}
-      <Box sx={{ maxWidth: '1400px', mx: 'auto', pb: 6, px: { xs: 2, sm: 3, md: 4 } }}>
+      {/* Main Content - NO MAX WIDTH */}
+      <Box sx={{ pb: 6, px: { xs: 2, sm: 3, md:  4, lg: 6 }, width: '100%' }}>
         {/* Filter Section */}
         <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 2, bgcolor: 'background.paper' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -142,7 +143,7 @@ const Home = () => {
                 <Select
                   value={tempSortBy}
                   label="Sort By"
-                  onChange={(e) => setTempSortBy(e.target.value)}
+                  onChange={(e) => setTempSortBy(e. target.value)}
                 >
                   <MenuItem value="rank">Rank</MenuItem>
                   <MenuItem value="name">Title (A-Z)</MenuItem>
@@ -195,20 +196,31 @@ const Home = () => {
         <Box 
           sx={{ 
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 240px))',
             gap: 3,
-            justifyContent: 'center',
             width: '100%',
             
-            // Responsive:  adjust card size for different screens
-            '@media (max-width: 600px)': {
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            // Mobile:  1 card, full width
+            gridTemplateColumns: '1fr',
+            justifyContent: 'center',
+            
+            // Tablet: 2 cards
+            '@media (min-width: 600px)': {
+              gridTemplateColumns: 'repeat(2, 240px)',
             },
-            '@media (min-width: 601px) and (max-width: 900px)': {
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 240px))',
+            
+            // Small desktop: 3 cards
+            '@media (min-width: 900px)': {
+              gridTemplateColumns: 'repeat(3, 240px)',
             },
-            '@media (min-width: 901px)': {
-              gridTemplateColumns:  'repeat(5, 240px)',
+            
+            // Medium desktop: 4 cards
+            '@media (min-width: 1200px)': {
+              gridTemplateColumns: 'repeat(4, 240px)',
+            },
+            
+            // Large desktop: 5 cards
+            '@media (min-width: 1400px)': {
+              gridTemplateColumns: 'repeat(5, 240px)',
               justifyContent: 'flex-start',
             },
           }}
@@ -218,7 +230,7 @@ const Home = () => {
               key={movie._id}
               elevation={3}
               sx={{
-                width: '240px', // Fixed width
+                width: '240px',
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: 2,
@@ -277,7 +289,7 @@ const Home = () => {
                   />
                 </Box>
 
-                <CardContent sx={{ flexGrow: 1, p: 2 }}>
+                <CardContent sx={{ flexGrow:  1, p: 2 }}>
                   {/* Title */}
                   <Typography
                     variant="subtitle1"
@@ -298,8 +310,8 @@ const Home = () => {
                   </Typography>
 
                   {/* Year & Runtime */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap:  1, mb: 1 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Typography variant="caption" color="text. secondary" fontWeight={600}>
                       {movie.year}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -354,7 +366,7 @@ const Home = () => {
         </Box>
 
         {/* Pagination */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+        <Box sx={{ display:  'flex', justifyContent:  'center', mt: 6 }}>
           <Pagination
             count={totalPages}
             page={page}
