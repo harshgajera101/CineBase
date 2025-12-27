@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Container,
-  Grid,
   Card,
   CardContent,
   CardActionArea,
@@ -18,6 +16,7 @@ import {
   Alert,
   Button,
   Paper,
+  Grid,
 } from '@mui/material';
 import {
   Star as StarIcon,
@@ -80,14 +79,14 @@ const Home = () => {
 
   if (error) {
     return (
-      <Container maxWidth={false} sx={{ py: 4, px: { xs: 2, sm: 3, md: 4 } }}>
+      <Box sx={{ py: 4, px: { xs: 2, sm: 3, md: 4 } }}>
         <Alert severity="error">{error}</Alert>
-      </Container>
+      </Box>
     );
   }
 
   return (
-    <Box sx={{ bgcolor: 'background.default' }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       {/* Hero Banner */}
       <Box
         sx={{
@@ -97,14 +96,14 @@ const Home = () => {
           mb: 4,
         }}
       >
-        <Container maxWidth={false} sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <Box sx={{ maxWidth: '1400px', mx: 'auto', px: { xs: 2, sm: 3, md: 4 } }}>
           <Box sx={{ textAlign: 'center' }}>
             <MovieIcon sx={{ fontSize: 80, mb: 2, opacity: 0.9 }} />
             <Typography variant="h2" fontWeight={700} gutterBottom>
               CineBase - IMDb Top 250 Movies
             </Typography>
             <Typography variant="h5" sx={{ opacity: 0.95, maxWidth: 800, mx: 'auto', mt: 2 }}>
-              Explore the greatest movies of all time. Search, filter, and discover
+              Explore the greatest movies of all time.  Search, filter, and discover
               cinematic masterpieces from every era and genre.
             </Typography>
             <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
@@ -122,10 +121,11 @@ const Home = () => {
               />
             </Box>
           </Box>
-        </Container>
+        </Box>
       </Box>
 
-      <Container maxWidth={false} sx={{ pb: 6, px: { xs: 2, sm: 3, md:  4 } }}>
+      {/* Main Content */}
+      <Box sx={{ maxWidth: '1400px', mx: 'auto', pb: 6, px: { xs: 2, sm: 3, md: 4 } }}>
         {/* Filter Section */}
         <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 2, bgcolor: 'background.paper' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -191,22 +191,34 @@ const Home = () => {
           </Grid>
         </Paper>
 
-        {/* Movie Grid - EXACTLY 5 CARDS PER ROW */}
-        <Box sx={{ 
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
-            lg: 'repeat(5, 1fr)',
-          },
-          gap: 3,
-        }}>
+        {/* Movie Grid - Fixed Size Cards, 5 per row */}
+        <Box 
+          sx={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 240px))',
+            gap: 3,
+            justifyContent: 'center',
+            width: '100%',
+            
+            // Responsive:  adjust card size for different screens
+            '@media (max-width: 600px)': {
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            },
+            '@media (min-width: 601px) and (max-width: 900px)': {
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 240px))',
+            },
+            '@media (min-width: 901px)': {
+              gridTemplateColumns:  'repeat(5, 240px)',
+              justifyContent: 'flex-start',
+            },
+          }}
+        >
           {movies.map((movie) => (
             <Card
               key={movie._id}
               elevation={3}
               sx={{
+                width: '240px', // Fixed width
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: 2,
@@ -275,7 +287,7 @@ const Home = () => {
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
-                      WebkitLineClamp: 2,
+                      WebkitLineClamp:  2,
                       WebkitBoxOrient: 'vertical',
                       minHeight: 48,
                       lineHeight: 1.3,
@@ -304,7 +316,7 @@ const Home = () => {
                   {/* Genre */}
                   <Typography
                     variant="caption"
-                    color="text.secondary"
+                    color="text. secondary"
                     sx={{
                       display: 'block',
                       mb: 1.5,
@@ -331,7 +343,7 @@ const Home = () => {
                     <Typography variant="h6" fontWeight={700} color="text.primary">
                       {movie.rating}
                     </Typography>
-                    <Typography variant="caption" color="text. secondary">
+                    <Typography variant="caption" color="text.secondary">
                       / 10
                     </Typography>
                   </Box>
@@ -359,7 +371,7 @@ const Home = () => {
             }}
           />
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 };
