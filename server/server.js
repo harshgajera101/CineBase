@@ -44,6 +44,27 @@ app.get('/health', (req, res) => {
   });
 });
 
+
+
+// Test route to get all movies (limited)
+app.get('/api/movies', async (req, res) => {
+  try {
+    const Movie = require('./models/Movie');
+    const movies = await Movie.find().limit(10).sort({ rank: 1 });
+    console.log(`✅ GET /api/movies - Found ${movies.length} movies`);
+    res.status(200).json({
+      success: true,
+      count: movies.length,
+      data: movies
+    });
+  } catch (error) {
+    console.error('❌ Error fetching movies:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
+
 // 404 handler
 app.use((req, res) => {
   console.log(`⚠️ 404 - Route not found: ${req.method} ${req.url}`);

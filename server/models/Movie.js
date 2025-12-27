@@ -8,20 +8,20 @@ const movieSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
+      required:  true,
       trim: true,
     },
     year: {
-      type:  Number,
+      type: Number,
       required: true,
     },
     rating: {
       type: Number,
       required: true,
-      min:  0,
+      min: 0,
       max: 10,
     },
-    genre: {
+    genre:  {
       type: String,
       required: true,
     },
@@ -33,11 +33,23 @@ const movieSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    budget: {
+      type: String,
+      default: 'Not Available',
+    },
+    box_office: {
+      type:  String,
+      default: 'Not Available',
+    },
     casts: {
       type: String,
       default: '',
     },
     directors: {
+      type: String,
+      default: '',
+    },
+    writers: {
       type: String,
       default:  '',
     },
@@ -45,7 +57,7 @@ const movieSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index for search optimization
-movieSchema.index({ name: 'text', tagline: 'text' });
+// Text index for search functionality
+movieSchema.index({ name: 'text', tagline: 'text', genre: 'text' });
 
 module.exports = mongoose.model('Movie', movieSchema);
