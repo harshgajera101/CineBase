@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   AppBar,
@@ -8,95 +8,169 @@ import {
   IconButton,
   Box,
   Container,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import {
-  Brightness4 as DarkIcon,
-  Brightness7 as LightIcon,
   Movie as MovieIcon,
-  Login as LoginIcon,
-  Logout as LogoutIcon,
-  Dashboard as DashboardIcon,
   Search as SearchIcon,
+  Dashboard as DashboardIcon,
+  AccountCircle,
 } from '@mui/icons-material';
 import { AuthContext } from '../context/AuthContext';
-import { ThemeContext } from '../context/ThemeContext';
 
 const Navbar = () => {
   const { user, logout, isAdmin } = useContext(AuthContext);
-  const { mode, toggleTheme } = useContext(ThemeContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event. currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleClose();
+    logout();
+  };
 
   return (
-    <AppBar position="sticky">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+    <AppBar 
+      position="sticky" 
+      elevation={0}
+      sx={{
+        background: 'linear-gradient(90deg, #1a1a2e 0%, #16213e 100%)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      }}
+    >
+      <Container maxWidth={false} sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <Toolbar disableGutters sx={{ py: 1 }}>
           {/* Logo */}
-          <MovieIcon sx={{ mr: 1 }} />
-          <Typography
-            variant="h6"
+          <Box
             component={RouterLink}
             to="/"
             sx={{
-              mr: 4,
-              fontWeight: 700,
+              display: 'flex',
+              alignItems:  'center',
               textDecoration: 'none',
-              color: 'inherit',
+              color: 'white',
+              mr: 4,
+              '&:hover': { opacity: 0.9 },
             }}
           >
-            CineBase
-          </Typography>
+            <MovieIcon sx={{ fontSize: 32, mr: 1 }} />
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                letterSpacing: 1,
+                display: { xs: 'none', sm: 'block' },
+              }}
+            >
+              CineBase
+            </Typography>
+          </Box>
 
           {/* Navigation Links */}
-          <Box sx={{ flexGrow: 1, display:  'flex', gap: 2 }}>
-            <Button color="inherit" component={RouterLink} to="/">
-              Home
+          <Box sx={{ flexGrow: 1, display:  'flex', gap: 1 }}>
+            <Button
+              component={RouterLink}
+              to="/"
+              sx={{
+                color: 'white',
+                fontWeight: 600,
+                px: 2,
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
+            >
+              HOME
             </Button>
             <Button
-              color="inherit"
               component={RouterLink}
               to="/search"
               startIcon={<SearchIcon />}
+              sx={{
+                color: 'white',
+                fontWeight:  600,
+                px: 2,
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
             >
-              Search
+              SEARCH
             </Button>
             {isAdmin && (
               <Button
-                color="inherit"
                 component={RouterLink}
                 to="/admin"
                 startIcon={<DashboardIcon />}
+                sx={{
+                  color: 'white',
+                  fontWeight: 600,
+                  px: 2,
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
               >
-                Admin
+                ADMIN
               </Button>
             )}
           </Box>
 
-          {/* Theme Toggle */}
-          <IconButton onClick={toggleTheme} color="inherit" sx={{ mr: 1 }}>
-            {mode === 'dark' ? <LightIcon /> : <DarkIcon />}
-          </IconButton>
-
-          {/* Auth Buttons */}
+          {/* User Menu or Login */}
           {user ?  (
             <>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                {user.email}
-              </Typography>
-              <Button
-                color="inherit"
-                onClick={logout}
-                startIcon={<LogoutIcon />}
+              <IconButton
+                onClick={handleMenu}
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
               >
-                Logout
-              </Button>
+                <AccountCircle sx={{ fontSize: 32 }} />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem disabled>
+                  <Typography variant="caption" color="text.secondary">
+                    {user.email}
+                  </Typography>
+                </MenuItem>
+                <MenuItem disabled>
+                  <Typography variant="caption" color="text.secondary">
+                    Role: {user.role}
+                  </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
             </>
           ) : (
             <Button
-              color="inherit"
               component={RouterLink}
               to="/login"
-              startIcon={<LoginIcon />}
+              variant="contained"
+              sx={{
+                bgcolor: '#667eea',
+                color:  'white',
+                fontWeight: 600,
+                px:  3,
+                '&:hover':  {
+                  bgcolor: '#5568d3',
+                },
+              }}
             >
-              Login
+              LOGIN
             </Button>
           )}
         </Toolbar>
