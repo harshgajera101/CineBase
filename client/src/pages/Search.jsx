@@ -1,18 +1,18 @@
 import { Container, Typography, Box } from '@mui/material';
 
-const Login = () => {
+const Search = () => {
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       <Box>
         <Typography variant="h4" gutterBottom>
-          🔐 Login
+          🔍 Search Movies
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Login Page - Coming Soon
+          Search Page - Coming Soon
         </Typography>
       </Box>
     </Container>
   );
 };
 
-export default Login;
+export default Search;
