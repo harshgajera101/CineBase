@@ -121,5 +121,3 @@ MIT License
 - GitHub: [@harshgajera101](https://github.com/harshgajera101)
 
 ---
-
-⭐ Star this repo if you found it helpful! 
