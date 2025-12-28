@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Container,
   Box,
   TextField,
   Button,
@@ -9,7 +8,6 @@ import {
   Card,
   CardContent,
   CardActionArea,
-  Grid,
   Chip,
   Alert,
   CircularProgress,
@@ -47,10 +45,11 @@ const Search = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', width: '100%', py: 4 }}>
+      {/* ✅ FIXED:  Changed from Container to Box with full width padding */}
+      <Box sx={{ px: { xs: 2, sm: 3, md: 4, lg: 6 }, width: '100%' }}>
         {/* Search Header */}
-        <Box sx={{ textAlign: 'center', mb:  6 }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography variant="h3" fontWeight={700} gutterBottom>
             🔍 Search Movies
           </Typography>
@@ -60,7 +59,7 @@ const Search = () => {
         </Box>
 
         {/* Search Form */}
-        <Box component="form" onSubmit={handleSearch} sx={{ mb: 4 }}>
+        <Box component="form" onSubmit={handleSearch} sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}>
           <Box sx={{ display: 'flex', gap: 2 }}>
             <TextField
               fullWidth
@@ -84,7 +83,7 @@ const Search = () => {
               variant="contained"
               size="large"
               disabled={loading}
-              sx={{ px: 4 }}
+              sx={{ px: 4, whiteSpace: 'nowrap' }}
             >
               Search
             </Button>
@@ -100,7 +99,7 @@ const Search = () => {
 
         {/* Error */}
         {error && (
-          <Alert severity="error" sx={{ mb: 4 }}>
+          <Alert severity="error" sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}>
             {error}
           </Alert>
         )}
@@ -114,114 +113,182 @@ const Search = () => {
                 : 'No movies found'}
             </Typography>
 
-            <Grid container spacing={3}>
+            {/* ✅ FIXED: Using same grid layout as Home page with fixed card sizes */}
+            <Box
+              sx={{
+                display: 'grid',
+                gap: 3,
+                width: '100%',
+                
+                // Mobile:  1 card, full width
+                gridTemplateColumns: '1fr',
+                justifyContent: 'center',
+                
+                // Tablet: 2 cards
+                '@media (min-width: 600px)': {
+                  gridTemplateColumns: 'repeat(2, 240px)',
+                },
+                
+                // Small desktop: 3 cards
+                '@media (min-width: 900px)': {
+                  gridTemplateColumns: 'repeat(3, 240px)',
+                },
+                
+                // Medium desktop: 4 cards
+                '@media (min-width: 1200px)': {
+                  gridTemplateColumns: 'repeat(4, 240px)',
+                },
+                
+                // Large desktop: 5 cards
+                '@media (min-width: 1400px)': {
+                  gridTemplateColumns: 'repeat(5, 240px)',
+                  justifyContent: 'flex-start',
+                },
+              }}
+            >
               {results.map((movie) => (
-                <Grid item xs={12} sm={6} md={4} key={movie._id}>
-                  <Card
-                    elevation={3}
+                <Card
+                  key={movie._id}
+                  elevation={3}
+                  sx={{
+                    width: '240px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderRadius: 2,
+                    bgcolor: 'background.paper',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow: 6,
+                    },
+                  }}
+                >
+                  <CardActionArea
+                    component={RouterLink}
+                    to={`/movie/${movie._id}`}
                     sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'stretch',
                       height: '100%',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        transform: 'translateY(-8px)',
-                        boxShadow: 6,
-                      },
                     }}
                   >
-                    <CardActionArea
-                      component={RouterLink}
-                      to={`/movie/${movie._id}`}
-                      sx={{ height: '100%' }}
+                    {/* Poster - Fixed Height */}
+                    <Box
+                      sx={{
+                        height: 220,
+                        width: '100%',
+                        background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        flexShrink: 0,
+                      }}
                     >
-                      {/* Poster */}
-                      <Box
+                      <Typography
+                        variant="h1"
                         sx={{
-                          height: 220,
-                          background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          position: 'relative',
+                          color: 'white',
+                          opacity: 0.2,
+                          fontWeight: 700,
+                          fontSize: '4rem',
                         }}
                       >
-                        <Typography
-                          variant="h1"
-                          sx={{
-                            color: 'white',
-                            opacity: 0.2,
-                            fontWeight: 700,
-                            fontSize: '4rem',
-                          }}
-                        >
-                          {movie.rank}
+                        {movie.rank}
+                      </Typography>
+                      <Chip
+                        label={`#${movie.rank}`}
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          top: 12,
+                          left: 12,
+                          fontWeight: 700,
+                          bgcolor: 'rgba(0,0,0,0.7)',
+                          color: 'white',
+                        }}
+                      />
+                    </Box>
+
+                    <CardContent sx={{ flexGrow: 1, p: 2 }}>
+                      {/* Title - Fixed Height */}
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        gutterBottom
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp:  2,
+                          WebkitBoxOrient: 'vertical',
+                          minHeight: 48,
+                          lineHeight: 1.3,
+                          color: 'text.primary',
+                        }}
+                      >
+                        {movie.name}
+                      </Typography>
+
+                      {/* Year & Runtime */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                          {movie.year}
                         </Typography>
-                        <Chip
-                          label={`#${movie.rank}`}
-                          size="small"
-                          sx={{
-                            position: 'absolute',
-                            top: 12,
-                            left: 12,
-                            fontWeight: 700,
-                            bgcolor: 'rgba(0,0,0,0.7)',
-                            color: 'white',
-                          }}
-                        />
+                        <Typography variant="caption" color="text.secondary">
+                          •
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <TimeIcon sx={{ fontSize: 14 }} color="action" />
+                          <Typography variant="caption" color="text.secondary">
+                            {movie.run_time}
+                          </Typography>
+                        </Box>
                       </Box>
 
-                      <CardContent>
-                        <Typography variant="h6" fontWeight={700} gutterBottom>
-                          {movie.name}
+                      {/* Genre */}
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          display: 'block',
+                          mb: 1.5,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {movie.genre}
+                      </Typography>
+
+                      {/* Rating */}
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.5,
+                          bgcolor: 'rgba(102, 126, 234, 0.1)',
+                          p: 0.8,
+                          borderRadius: 1,
+                        }}
+                      >
+                        <StarIcon sx={{ color: '#f5c518', fontSize: 20 }} />
+                        <Typography variant="h6" fontWeight={700} color="text.primary">
+                          {movie.rating}
                         </Typography>
-
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap:  1, mb: 1 }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {movie.year}
-                          </Typography>
-                          <Typography variant="caption">•</Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap:  0.5 }}>
-                            <TimeIcon sx={{ fontSize: 14 }} />
-                            <Typography variant="caption" color="text.secondary">
-                              {movie.run_time}
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        <Typography
-                          variant="caption"
-                          color="text. secondary"
-                          sx={{ display: 'block', mb: 1.5 }}
-                        >
-                          {movie.genre}
+                        <Typography variant="caption" color="text.secondary">
+                          / 10
                         </Typography>
-
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                            bgcolor: 'rgba(102, 126, 234, 0.1)',
-                            p: 0.8,
-                            borderRadius: 1,
-                          }}
-                        >
-                          <StarIcon sx={{ color: '#f5c518', fontSize: 18 }} />
-                          <Typography variant="h6" fontWeight={700}>
-                            {movie. rating}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            / 10
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
+                      </Box>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               ))}
-            </Grid>
+            </Box>
           </>
         )}
-      </Container>
+      </Box>
     </Box>
   );
 };
