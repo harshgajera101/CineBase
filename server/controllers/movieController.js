@@ -47,8 +47,8 @@ const searchMovies = async (req, res) => {
   try {
     const { q } = req.query;
 
-    if (! q) {
-      return res. status(400).json({ 
+    if (!q) {
+      return res.status(400).json({ 
         success: false, 
         message: 'Please provide search query' 
       });

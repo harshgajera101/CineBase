@@ -13,7 +13,7 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       // Verify token
-      const decoded = jwt.verify(token, process. env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Get user from token (exclude password)
       req.user = await User.findById(decoded.id).select('-password');
@@ -24,7 +24,6 @@ const protect = async (req, res, next) => {
           message: 'User not found' 
         });
       }
-
       next();
     } catch (error) {
       console.error('❌ Auth Middleware Error:', error);

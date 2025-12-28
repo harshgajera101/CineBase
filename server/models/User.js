@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
 // Hash password before saving - FIXED VERSION
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) {
-    return; // Just return, don't call next()
+    return;
   }
   this.password = await bcrypt.hash(this.password, 10);
 });

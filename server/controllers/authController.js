@@ -64,18 +64,18 @@ const registerUser = async (req, res) => {
 // @access  Public
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req. body;
+    const { email, password } = req.body;
 
     // Validation
     if (!email || !password) {
       return res.status(400).json({ 
         success: false, 
-        message:  'Please provide email and password' 
+        message: 'Please provide email and password' 
       });
     }
 
     // Check for user
-    const user = await User. findOne({ email });
+    const user = await User.findOne({ email });
 
     if (user && (await user.comparePassword(password))) {
       res.json({
@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
 // @access  Private
 const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user. id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     res.json({
       success: true,
       data: user,
