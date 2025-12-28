@@ -7,7 +7,6 @@ import {
   Button,
   IconButton,
   Box,
-  Container,
   Menu,
   MenuItem,
 } from '@mui/material';
@@ -24,7 +23,7 @@ const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
-    setAnchorEl(event. currentTarget);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
@@ -43,9 +42,11 @@ const Navbar = () => {
       sx={{
         background: 'linear-gradient(90deg, #1a1a2e 0%, #16213e 100%)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        width: '100%',
       }}
     >
-      <Container maxWidth={false} sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+      {/* ✅ FIXED: Removed Container, using Box with full width */}
+      <Box sx={{ width: '100%', px: { xs: 2, sm: 3, md: 4, lg: 6 } }}>
         <Toolbar disableGutters sx={{ py: 1 }}>
           {/* Logo */}
           <Box
@@ -53,7 +54,7 @@ const Navbar = () => {
             to="/"
             sx={{
               display: 'flex',
-              alignItems:  'center',
+              alignItems: 'center',
               textDecoration: 'none',
               color: 'white',
               mr: 4,
@@ -74,7 +75,7 @@ const Navbar = () => {
           </Box>
 
           {/* Navigation Links */}
-          <Box sx={{ flexGrow: 1, display:  'flex', gap: 1 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
             <Button
               component={RouterLink}
               to="/"
@@ -82,7 +83,7 @@ const Navbar = () => {
                 color: 'white',
                 fontWeight: 600,
                 px: 2,
-                '&:hover': {
+                '&:hover':  {
                   bgcolor: 'rgba(255, 255, 255, 0.1)',
                 },
               }}
@@ -162,10 +163,10 @@ const Navbar = () => {
               variant="contained"
               sx={{
                 bgcolor: '#667eea',
-                color:  'white',
+                color: 'white',
                 fontWeight: 600,
-                px:  3,
-                '&:hover':  {
+                px: 3,
+                '&:hover': {
                   bgcolor: '#5568d3',
                 },
               }}
@@ -174,7 +175,7 @@ const Navbar = () => {
             </Button>
           )}
         </Toolbar>
-      </Container>
+      </Box>
     </AppBar>
   );
 };
